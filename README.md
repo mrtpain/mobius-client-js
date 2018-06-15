@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/%40mobius-network%2Fmobius-client-js.svg)](https://badge.fury.io/js/%40mobius-network%2Fmobius-client-js)
+[![Build Status](https://travis-ci.org/mobius-network/mobius-client-js.svg?branch=master)](https://travis-ci.org/mobius-network/mobius-client-js)
 
 # mobius-client-js
 
@@ -77,10 +78,18 @@ $ yarn run example:auth
 Using express.js:
 
 ```js
-...
+const express = require("express");
+const app = express();
+
+// Enable CORS
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // GET /auth
 // Generates and returns challenge transaction XDR signed by application to user
-
 app.get("/auth", (req, res) => {
   res.send(
     MobiusClient.Auth.Challenge.call(
@@ -110,7 +119,8 @@ app.post("/auth", (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-...
+
+app.listen(process.env.PORT);
 ```
 
 ## Payment
